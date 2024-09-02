@@ -29,7 +29,7 @@ class Lexical_Analysis:
         file.seek(0)
         self.arq = file
 
-    def search_Key_Word(self, name): 
+    def search_Key_Word(self, name): #como é uma lista ordenada podemos usar a busca binária
         left = 0
         right = len(key_words) - 1
         while left <= right:
@@ -42,7 +42,7 @@ class Lexical_Analysis:
                 left = middle + 1
         return ID
 
-    # Literals
+    # Literals (x,y,z,name)
     v_Ctes = []
 
     def add_Cte(self, c):
