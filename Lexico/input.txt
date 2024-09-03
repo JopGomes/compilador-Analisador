@@ -260,3 +260,8 @@ class Lexical_Analysis:
             token_Aux = self.next_Token()
         if not self.lexicalError:
             print ("No lexical errors.")
+
+teste: []
+teste: {}
+teste: "
+teste: /
