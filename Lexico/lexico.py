@@ -7,17 +7,17 @@ key_words = ["array", "boolean", "break", "char", "continue", "do", "else", "fal
 
 # type indentif
 
-def is_Digit(c):
+def isdigit(c):
     if c in "0123456789":
         return True
     return False
 
-def is_Alnum(c):
+def isalpha(c):
     if c in string.ascii_letters:
         return True
     return False
 
-def is_Space(c):
+def isspace(c):
     if c in [chr(10), chr(13), "\f", "\v", "\t"," "]:
         return True
     return False
@@ -27,12 +27,21 @@ class Lexical_Analysis:
     lexicalError = False
     next_Char = "\f"
     arq = None
+    # Literals (x,y,z,name)
+    v_Ctes = []
+    # Identifiers
+    identifiers = {}
+    count = 0
+
+    secondary_Token = None
+    line = 1
+    ch = 1
 
     def __init__(self, file):
         file.seek(0)
         self.arq = file
 
-    def search_Key_Word(self, name): #como é uma lista ordenada podemos usar a busca binária
+    def searchKeyWord(self, name): #como é uma lista ordenada podemos usar a busca binária
         left = 0
         right = len(key_words) - 1
         while left <= right:
@@ -45,33 +54,24 @@ class Lexical_Analysis:
                 left = middle + 1
         return ID
 
-    # Literals (x,y,z,name)
-    v_Ctes = []
-
-    def add_Cte(self, c):
+    def addCharConst(self, c):
         self.v_Ctes.append(c)
         return len(self.v_Ctes)-1
 
-    def get_Cte(self, c):
+    def getCharConst(self, c):
         return self.v_Ctes[c]
 
-    # Identifiers
-    identifiers = {}
-    count = 0
-
-    def search_Name(self, name): 
+    def searchName(self, name): 
         if name not in self.identifiers:
             self.identifiers[name] = self.count
             self.count += 1
         return self.identifiers[name]
 
-    secondary_Token = None
-    line = 1
-    ch = 1
+
 
     def next_Token(self):
         sep = ""
-        while is_Space(self.next_Char):
+        while isspace(self.next_Char):
             if self.next_Char == "\n" or self.next_Char == "\r":
                 self.line+=1
             self.next_Char = self.arq.read(1)
@@ -80,26 +80,26 @@ class Lexical_Analysis:
         if self.next_Char == "":
             token = EOF #end of file
         
-        elif is_Digit(self.next_Char):#é um numero? tem . ? acho q tem q implementar com o . => fica no sintatico n?
+        elif isdigit(self.next_Char):#é um numero? tem . ? acho q tem q implementar com o . => fica no sintatico n?
             num_Aux = []
-            while is_Digit(self.next_Char):
+            while isdigit(self.next_Char):
                 num_Aux.append(self.next_Char)
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
             num = sep.join(num_Aux)
             token = NUMERAL
-            self.secondary_Token = self.add_Cte(num)
+            self.secondary_Token = self.addCharConst(num)
         
-        elif is_Alnum(self.next_Char):
+        elif isalpha(self.next_Char):
             text_Aux = []
-            while is_Alnum(self.next_Char) or self.next_Char == '_':
+            while isalpha(self.next_Char) or self.next_Char == '_':
                 text_Aux.append(self.next_Char)
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
             text = sep.join(text_Aux)
-            token = self.search_Key_Word(text)
+            token = self.searchKeyWord(text)
             if token == ID:
-                self.secondary_Token = self.search_Name(text)
+                self.secondary_Token = self.searchName(text)
         
         
         elif self.next_Char == "\"": #a barra é um caso mais complicado para representar string
@@ -117,7 +117,7 @@ class Lexical_Analysis:
             self.ch+=1
             string = sep.join(string_Aux)
             token = STRING
-            self.secondary_Token = self.add_Cte(string)
+            self.secondary_Token = self.addCharConst(string)
         
         else:
             #char
@@ -125,7 +125,7 @@ class Lexical_Analysis:
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
                 token = CHARACTER
-                self.secondary_Token = self.add_Cte(self.next_Char)
+                self.secondary_Token = self.addCharConst(self.next_Char)
                 self.next_Char = self.arq.read(2) 
                 self.ch+=2
             #operations
@@ -282,14 +282,13 @@ class Lexical_Analysis:
         token_Aux = self.next_Token()
         while token_Aux != EOF: 
             if token_Aux == UNKNOWN:
-                print("Character "+str(self.ch+1)+" not expected in the line " + str(self.line))
-                self.lexicalError = True
+                print("Character "+str(self.ch+1)+" UNKOWN ")
             token_Aux = self.next_Token()
         if not self.lexicalError:
-            print ("No lexical errors.")
+            print ("Lexical correct.")
 
 
 if __name__ == "__main__":
-   file = open("input.txt",'r')
+   file = open("Lexico\input.txt",'r')
    lexical =  Lexical_Analysis(file)
    lexical.run()
