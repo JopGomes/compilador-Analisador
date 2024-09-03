@@ -4,7 +4,9 @@ import string
 # Key Words
 key_words = ["array", "boolean", "break", "char", "continue", "do", "else", "false", "function", "if", "integer", "of", "string", "struct", "true", "type", "var", "while"]
 
-# Lexical_Finite_Automaton
+
+# type indentif
+
 def is_Digit(c):
     if c in "0123456789":
         return True
@@ -20,6 +22,7 @@ def is_Space(c):
         return True
     return False
 
+# Lexical_Finite_Automaton
 class Lexical_Analysis:
     lexicalError = False
     next_Char = "\f"
@@ -75,7 +78,7 @@ class Lexical_Analysis:
             self.ch+=1
         
         if self.next_Char == "":
-            token = EOF
+            token = EOF #end of file
         
         elif is_Alnum(self.next_Char):
             text_Aux = []
@@ -88,7 +91,7 @@ class Lexical_Analysis:
             if token == ID:
                 self.secondary_Token = self.search_Name(text)
         
-        elif is_Digit(self.next_Char):
+        elif is_Digit(self.next_Char):#é um numero? tem . ? acho q tem q implementar com o . => fica no sintatico n?
             num_Aux = []
             while is_Digit(self.next_Char):
                 num_Aux.append(self.next_Char)
@@ -186,6 +189,7 @@ class Lexical_Analysis:
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
                 token = RIGHT_PARENTHESIS
+
             elif self.next_Char == "&":
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
@@ -194,7 +198,8 @@ class Lexical_Analysis:
                     self.ch+=1
                     token = AND
                 else:
-                    token = UNKNOWN
+                    token = UNKNOWN #Comparação bit a bit? n vamos implementar
+
             elif self.next_Char == "|":
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
@@ -204,15 +209,7 @@ class Lexical_Analysis:
                     token = OR
                 else:
                     token = UNKNOWN
-            elif self.next_Char == "<":
-                self.next_Char=self.arq.read(1)
-                self.ch+=1
-                if self.next_Char == "=":
-                    token = LESS_OR_EQUAL
-                    self.next_Char = self.arq.read(1)
-                    self.ch+=1
-                else:
-                    token=LESS_THAN
+
             elif self.next_Char == ">":
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
@@ -222,6 +219,15 @@ class Lexical_Analysis:
                     self.ch+=1
                 else:
                     token = GREATER_THAN
+            elif self.next_Char == "<":
+                self.next_Char=self.arq.read(1)
+                self.ch+=1
+                if self.next_Char == "=":
+                    token = LESS_OR_EQUAL
+                    self.next_Char = self.arq.read(1)
+                    self.ch+=1
+                else:
+                    token=LESS_THAN
             elif self.next_Char == "!":
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
@@ -243,11 +249,10 @@ class Lexical_Analysis:
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
                 token = DIVIDE
-            else: #default
+            else: #default => don't have char => unknown
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
                 token = UNKNOWN
-        # print('token', token)
         return token
 
     def Lexical_error(self, token): #print err default
@@ -258,7 +263,7 @@ class Lexical_Analysis:
     def run(self):
         self.next_Char = self.arq.read(1)
         token_Aux = self.next_Token()
-        while token_Aux != EOF:
+        while token_Aux != EOF: 
             if token_Aux == UNKNOWN:
                 print("Character "+str(self.ch+1)+" not expected in the line " + str(self.line))
                 self.lexicalError = True
