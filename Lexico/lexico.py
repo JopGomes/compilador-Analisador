@@ -8,15 +8,20 @@ key_words = ["array", "boolean", "break", "char", "continue", "do", "else", "fal
 # type indentif
 
 def isdigit(c):
+<<<<<<< HEAD
     return '0' <= c <= '9'
 
 def isalpha(c):
     return ('a' <= c <= 'z') or ('A' <= c <= 'Z')
+=======
+     return c in "0123456789"
+
+def isalpha(c):
+    return c in string.ascii_letters
+>>>>>>> 9c8d659f327a9c5344238bbe34ac3b9ac09b97e1
 
 def isspace(c):
-    if c in [chr(10), chr(13), "\f", "\v", "\t"," "]:
-        return True
-    return False
+    return c in [chr(10), chr(13), "\f", "\v", "\t"," "]
 
 class Lexical_Analysis:
     lexicalError = False
@@ -36,14 +41,14 @@ class Lexical_Analysis:
         file.seek(0)
         self.arq = file
 
-    def searchKeyWord(self, name): #como é uma lista ordenada podemos usar a busca binária
+    def searchKeyWord(self, keyword): #como key_words é uma lista ordenada podemos usar a busca binária
         left = 0
         right = len(key_words) - 1
         while left <= right:
             middle = (left + right) // 2
-            if key_words[middle] == name:
+            if key_words[middle] == keyword:
                 return middle
-            elif key_words[middle] > name:
+            elif key_words[middle] > keyword:
                 right = middle - 1
             else:
                 left = middle + 1
@@ -273,8 +278,13 @@ class Lexical_Analysis:
         token_Aux = self.next_Token()
         while token_Aux != EOF: 
             if token_Aux == UNKNOWN:
+<<<<<<< HEAD
                 print("Character "+str(self.ch+1)+" UNKNOWN ")
             token_Aux = self.next_Token()
+=======
+                print("Character "+str(self.ch+1)+" UNKOWN ")
+            token_Aux = self.next_Token() #sempre analizamos o proximo token
+>>>>>>> 9c8d659f327a9c5344238bbe34ac3b9ac09b97e1
         if not self.lexicalError:
             print ("Lexical correct.")
 
