@@ -8,21 +8,16 @@ key_words = ["array", "boolean", "break", "char", "continue", "do", "else", "fal
 # type indentif
 
 def isdigit(c):
-    if c in "0123456789":
-        return True
-    return False
+    return '0' <= c <= '9'
 
 def isalpha(c):
-    if c in string.ascii_letters:
-        return True
-    return False
+    return ('a' <= c <= 'z') or ('A' <= c <= 'Z')
 
 def isspace(c):
     if c in [chr(10), chr(13), "\f", "\v", "\t"," "]:
         return True
     return False
 
-# Lexical_Finite_Automaton
 class Lexical_Analysis:
     lexicalError = False
     next_Char = "\f"
@@ -78,7 +73,7 @@ class Lexical_Analysis:
             self.ch+=1
         
         if self.next_Char == "":
-            token = EOF #end of file
+            token = EOF 
         
         elif isdigit(self.next_Char):#é um numero? tem . ? acho q tem q implementar com o . => fica no sintatico n?
             num_Aux = []
@@ -202,8 +197,6 @@ class Lexical_Analysis:
                 self.ch+=1
                 token = RIGHT_PARENTHESIS
             
-            #boolean
-
             elif self.next_Char == "&":
                 self.next_Char = self.arq.read(1)
                 self.ch+=1
@@ -212,7 +205,7 @@ class Lexical_Analysis:
                     self.ch+=1
                     token = AND
                 else:
-                    token = UNKNOWN #Comparação bit a bit? n vamos implementar
+                    token = UNKNOWN 
 
             elif self.next_Char == "|":
                 self.next_Char = self.arq.read(1)
@@ -223,8 +216,6 @@ class Lexical_Analysis:
                     token = OR
                 else:
                     token = UNKNOWN
-
-            #comparation boolean
 
             elif self.next_Char == "=":
                 self.next_Char = self.arq.read(1)
@@ -282,13 +273,13 @@ class Lexical_Analysis:
         token_Aux = self.next_Token()
         while token_Aux != EOF: 
             if token_Aux == UNKNOWN:
-                print("Character "+str(self.ch+1)+" UNKOWN ")
+                print("Character "+str(self.ch+1)+" UNKNOWN ")
             token_Aux = self.next_Token()
         if not self.lexicalError:
             print ("Lexical correct.")
 
 
 if __name__ == "__main__":
-   file = open("Lexico\input.txt",'r')
+   file = open("input.txt",'r')
    lexical =  Lexical_Analysis(file)
    lexical.run()
