@@ -8,17 +8,10 @@ key_words = ["array", "boolean", "break", "char", "continue", "do", "else", "fal
 # type indentif
 
 def isdigit(c):
-<<<<<<< HEAD
     return '0' <= c <= '9'
 
 def isalpha(c):
     return ('a' <= c <= 'z') or ('A' <= c <= 'Z')
-=======
-     return c in "0123456789"
-
-def isalpha(c):
-    return c in string.ascii_letters
->>>>>>> 9c8d659f327a9c5344238bbe34ac3b9ac09b97e1
 
 def isspace(c):
     return c in [chr(10), chr(13), "\f", "\v", "\t"," "]
@@ -102,16 +95,20 @@ class Lexical_Analysis:
                 self.secondary_Token = self.searchName(text)
         
         
-        elif self.next_Char == "\"": #a barra é um caso mais complicado para representar string
+        elif self.next_Char == "\"": #é um caso mais complicado para representar string
             string_Aux = []
             string_Aux.append(self.next_Char)
             self.next_Char = self.arq.read(1)
             self.ch+=1
             if self.next_Char != "\"":
-                while(self.next_Char!="\""):
+                while(self.next_Char!="\""): 
                     string_Aux.append(self.next_Char)
                     self.next_Char = self.arq.read(1)
                     self.ch+=1
+                    if self.next_Char == "":
+                        self.lexicalError = True # para dar erro no caso de não fechar a string
+                        break; #quebrar o while
+                    
             string_Aux.append(self.next_Char)
             self.next_Char = self.arq.read(1)
             self.ch+=1
@@ -278,18 +275,15 @@ class Lexical_Analysis:
         token_Aux = self.next_Token()
         while token_Aux != EOF: 
             if token_Aux == UNKNOWN:
-<<<<<<< HEAD
                 print("Character "+str(self.ch+1)+" UNKNOWN ")
             token_Aux = self.next_Token()
-=======
-                print("Character "+str(self.ch+1)+" UNKOWN ")
-            token_Aux = self.next_Token() #sempre analizamos o proximo token
->>>>>>> 9c8d659f327a9c5344238bbe34ac3b9ac09b97e1
         if not self.lexicalError:
             print ("Lexical correct.")
+        else:
+            print ("Lexical not correct.")
 
 
 if __name__ == "__main__":
-   file = open("input.txt",'r')
+   file = open("./Lexico/input.txt",'r')
    lexical =  Lexical_Analysis(file)
    lexical.run()

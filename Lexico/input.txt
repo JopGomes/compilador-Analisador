@@ -8,3 +8,7 @@ function add(a, b) {
 var result = add(x, y);
 
 print("A soma de " + x + " e " + y + " é: " + result);
+
+"
+
+testeeeee_'123455.57 "
